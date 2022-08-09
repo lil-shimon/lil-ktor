@@ -1,4 +1,4 @@
-# lil-kt
+# lil-ktor
 
 ## auto reload
 
