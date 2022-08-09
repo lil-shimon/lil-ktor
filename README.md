@@ -17,7 +17,7 @@ ktor {
 }
 
 ```
-after than, run this command
+after that, run this command to build project
 ```shell
 gradlew -t build
 ```
