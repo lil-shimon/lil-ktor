@@ -8,7 +8,10 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
+    // first line should be koin ( due to avoiding compile error )
+    configureKoin()
     configureRouting()
     configureSerialization()
     configureMonitoring()
+    configureDefaultHeader()
 }
