@@ -1,12 +1,19 @@
 package com.example.routes
 
 import com.example.models.ApiResponse
+import com.example.repository.HeroRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
 fun Route.getAllHeroes() {
+
+    // actually implement heroRepositoryImpl
+    // inject it in koinModule.kt
+    val heroRepository: HeroRepository by inject()
+
     get("/heroes") {
         try {
             // query parameter for page.
@@ -16,7 +23,12 @@ fun Route.getAllHeroes() {
             // check query parameter for page size is between one and five.
             // if not, throws an IllegalArgumentException
             require(page in 1..5)
-            call.respond(message = page)
+
+            // get all heroes from repository
+            // make api response
+            val apiResponse = heroRepository.getAllHeroes(page = page)
+
+            call.respond(message = apiResponse, status = HttpStatusCode.OK)
         } catch (e: NumberFormatException) {
 
             // when query parameter of page is not able to convert to Int.
