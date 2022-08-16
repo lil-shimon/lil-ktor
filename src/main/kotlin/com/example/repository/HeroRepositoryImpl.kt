@@ -397,8 +397,49 @@ class HeroRepositoryImpl: HeroRepository {
     )
 
 
+    // getAllHeroes
+    // return heroes by page number
     override suspend fun getAllHeroes(page: Int): ApiResponse {
-        TODO("Not yet implemented")
+        return ApiResponse(
+            success = true,
+            message = "ok",
+            prevPage = calculatePage(page)["prevPage"],
+            nextPage = calculatePage(page)["nextPage"],
+            heroes = heroes[page]!! // page is between 1 and 5 so not null
+        )
+    }
+
+    private fun calculatePage(page: Int): Map<String, Int?> {
+
+        // when page is 1 return prevPage = null so nullable
+        var prevPage: Int? = page
+
+        // when page is 5 nextPage does not exist so nullable
+        var nextPage: Int? = page
+
+        // when page number is between 1 and 4, set nextPage is page + 1
+        if (page in 1 .. 4) {
+            nextPage = nextPage?.plus(1)
+        }
+
+        // when page number is between 2 and 5, set prevPage is page - 1
+        if (page in 2 .. 5) {
+            prevPage = prevPage?.minus(1)
+        }
+
+        // when page number is 1, set prevPage to null.
+        // there is no previous page
+        if (page == 1) {
+            prevPage = null
+        }
+
+        // when page number is 5, set nextPage to null.
+        // there is no next page
+        if (page == 5) {
+            nextPage = null
+        }
+
+        return mapOf("prevPage" to prevPage, "nextPage" to nextPage)
     }
 
     override suspend fun searchHeroes(name: String): ApiResponse {
