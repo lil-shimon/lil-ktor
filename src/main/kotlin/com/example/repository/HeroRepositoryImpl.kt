@@ -8,7 +8,7 @@ private const val PREVIOUS_PAGE_KEY = "prevPage"
 
 private const val NEXT_PAGE_KEY = "nextPage"
 
-class HeroRepositoryImpl: HeroRepository {
+class HeroRepositoryImpl : HeroRepository {
 
     override val heroes: Map<Int, List<Hero>> by lazy {
         mapOf(
@@ -421,12 +421,12 @@ class HeroRepositoryImpl: HeroRepository {
         var nextPage: Int? = page
 
         // when page number is between 1 and 4, set nextPage is page + 1
-        if (page in 1 .. 4) {
+        if (page in 1..4) {
             nextPage = nextPage?.plus(1)
         }
 
         // when page number is between 2 and 5, set prevPage is page - 1
-        if (page in 2 .. 5) {
+        if (page in 2..5) {
             prevPage = prevPage?.minus(1)
         }
 
@@ -445,7 +445,32 @@ class HeroRepositoryImpl: HeroRepository {
         return mapOf("prevPage" to prevPage, NEXT_PAGE_KEY to nextPage)
     }
 
-    override suspend fun searchHeroes(name: String): ApiResponse {
-        TODO("Not yet implemented")
+    override suspend fun searchHeroes(name: String?): ApiResponse {
+        return ApiResponse(
+            success = true,
+            message = "ok",
+            heroes = findHeroes(name)
+        )
+    }
+
+    private fun findHeroes(query: String?): List<Hero> {
+        val founded = mutableListOf<Hero>()
+
+        // when name is not null or empty
+        // query parameter exists so filter hero name by query parameter that converted to lowercase
+        // append search result to founded list
+        return if (!query.isNullOrEmpty()) {
+            heroes.forEach { (_, heroes) ->
+                heroes.forEach { hero ->
+                    if (hero.name.lowercase().contains(query.lowercase()))
+                        founded.add(hero)
+                }
+            }
+            founded
+        } else {
+
+            // when name is null or empty return empty list
+            emptyList()
+        }
     }
 }
