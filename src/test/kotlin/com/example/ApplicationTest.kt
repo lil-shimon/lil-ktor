@@ -1,15 +1,12 @@
 package com.example
 
-import io.ktor.server.routing.*
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.request.*
+import com.example.plugins.configureRouting
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import kotlin.test.*
+import io.ktor.http.*
 import io.ktor.server.testing.*
-import com.example.plugins.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class ApplicationTest {
     @Test
@@ -18,8 +15,10 @@ class ApplicationTest {
             configureRouting()
         }
         client.get("/").apply {
-            assertEquals(HttpStatusCode.OK, status)
-            assertEquals("Hello World!", bodyAsText())
+            assertEquals(
+                expected = HttpStatusCode.OK,
+                actual = status
+            )
         }
     }
 }
